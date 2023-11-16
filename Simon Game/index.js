@@ -1,5 +1,3 @@
- // alert("hi");
-
 var buttoncolors =["red","blue","green","yellow"];
 var userclickedpattern=[];
 var gamepattern =[];
@@ -7,33 +5,22 @@ var level=0;
 var i=-1;
 var j=-1;
 var count1=0;
+var toggled = false;
 
-function nextsequence()
+nextsequence=()=>
 {
 var randomnumber = Math.floor(Math.random()*4);
-
 var randomchosencolor = buttoncolors[randomnumber];
-
 gamepattern.push(randomchosencolor);
 i++;
-
 $("#"+randomchosencolor).fadeOut(150).fadeIn(150).fadeOut(150).fadeIn(150);
-//alert(gamepattern.length);
 
-// var audio = new Audio("sounds/" + randomchosencolor + ".mp3");
-// audio.play();
-//play_audio(randomchosencolor);
-//document.getElementById('myAudio').play();
 }
 
-//nextsequence();
-
  $(".btn").click(function(){
-   //console.log(userclickedpattern.length);
    var color_press = $(this).attr("id");
     userclickedpattern.push(color_press);
    j++;
-   //console.log(userclickedpattern.length);
    play_audio(color_press);
    animate_press(color_press);
    var bool=buttonpress_insequence_check()
@@ -61,11 +48,11 @@ $("#"+randomchosencolor).fadeOut(150).fadeIn(150).fadeOut(150).fadeIn(150);
          $(".start").removeClass("game-over");
        },200);
      }
-   // console.log(userclickedpattern);
+
  });
 
-// var name; not needed
- function play_audio(name)
+
+play_audio = (name)=>
  {
    switch (name) {
 
@@ -93,9 +80,8 @@ $("#"+randomchosencolor).fadeOut(150).fadeIn(150).fadeOut(150).fadeIn(150);
    }
 
  }
-// var button_color;
 
- function animate_press(button_color)
+animate_press = (button_color)=>
 {
   $("."+button_color).addClass("pressed");
 
@@ -105,18 +91,38 @@ $("#"+randomchosencolor).fadeOut(150).fadeIn(150).fadeOut(150).fadeIn(150);
 
 }
 
-$(document).keypress(function(){
-  level=0;
-  i=-1;
-  j=-1;
-  count1=0;
-  gamepattern=[];
-  userclickedpattern=[];
-  nextsequence();
-  $("h1").text("Level "+ level);
+reset_game = () =>{
+      level=0;
+      i=-1;
+      j=-1;
+      count1=0;
+      gamepattern=[];
+      userclickedpattern=[];
+}
+
+$(document).keypress((e)=>{
+  if(!toggled){
+    if(e.key == 's'|| e.key =='S'){
+      toggled=!toggled;
+      reset_game();
+      nextsequence();
+      $("h1").text("Level "+ level);
+      }
+      else{
+        $("h1").text("Press s to start the game");
+        level=0;
+      reset_game();
+      }
+  }
+  else{
+    toggled=!toggled;
+      reset_game();
+      $("h1").text("Press s to start the game");
+  }
+  
 });
 
-function buttonpress_insequence_check()
+buttonpress_insequence_check = ()=>
 {
   var count=0;
   var m=0;
